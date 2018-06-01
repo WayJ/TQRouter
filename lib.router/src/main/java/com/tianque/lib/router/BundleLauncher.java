@@ -37,7 +37,7 @@ public abstract class BundleLauncher {
     public void prelaunchBundle(Bundle bundle) { }
 
 
-    public void launchBundle(Bundle bundle, Context context, Postcard uri) {
+    public void launchBundle(Bundle bundle, Context context, Postcard postcard) {
         if (!bundle.isLaunchable()) {
             // TODO: Exit app
 
