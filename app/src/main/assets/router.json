@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "bundles": [
+
+    {
+      "uri": "main",
+      "pkg": "com.tianque.cmm.app.main",
+      "rules": {
+        "": ".enter.LaunchActivity"
+      }
+    },
+    {
+      "uri": "home",
+      "pkg": "com.tianque.cmm.app.home"
+    },
+    {
+      "uri": "mine",
+      "pkg": "com.tianque.cmm.app.mine"
+    }
+  ]
+}
