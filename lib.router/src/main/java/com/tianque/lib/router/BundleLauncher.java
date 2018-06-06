@@ -66,7 +66,7 @@ public abstract class BundleLauncher {
     }
 
 
-    public <T> T createObject(Bundle bundle, Context context, String type) {
+    public <T> T createObject(Postcard postcard, Context context, String type) {
         return null;
     }
 

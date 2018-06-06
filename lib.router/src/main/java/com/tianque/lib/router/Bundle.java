@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -718,7 +719,7 @@ public class Bundle {
     }
 
     protected void prepareForLaunch() {
-        if (mIntent != null) return;
+//        if (mIntent != null) return;
 
         if (mApplicableLauncher == null
 
@@ -874,12 +875,12 @@ public class Bundle {
         this.entrance = entrance;
     }
 
-    protected <T> T createObject(Context context, String type) {
+    protected <T> T createObject(Postcard postcard, Context context, String type) {
         if (mApplicableLauncher == null) {
             prepareForLaunch();
         }
         if (mApplicableLauncher == null) return null;
-        return mApplicableLauncher.createObject(this, context, type);
+        return mApplicableLauncher.createObject(postcard, context, type);
     }
 
     protected boolean isEnabled() {

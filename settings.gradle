@@ -1,1 +1,1 @@
-include ':app',':lib.router', ':app.main'
+include ':app',':lib.router', ':app.main', ':app.mine'

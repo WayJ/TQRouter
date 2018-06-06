@@ -112,14 +112,22 @@ public class TQRouter {
         return null;
     }
 
+    public static <T> T createFragment(String uriString, Context context){
+        return createObject("fragment",uriString,context);
+    }
+
+    public static <T> T createFragmentV4(String uriString, Context context){
+        return createObject("fragment-v4",uriString,context);
+    }
+
     public static <T> T createObject(String type, String uriString, Context context) {
         return createObject(type, makeUri(uriString), context);
     }
 
     public static <T> T createObject(String type, Uri uri, Context context) {
-        Bundle bundle = Bundle.getLaunchableBundle(uri);
-        if (bundle != null) {
-            return bundle.createObject(context, type);
+        Postcard postcard = Bundle.makePostcard(uri);
+        if (postcard != null) {
+            return postcard.getBundle().createObject(postcard,context, type);
         }
         return null;
     }

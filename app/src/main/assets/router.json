@@ -4,18 +4,17 @@
 
     {
       "uri": "main",
-      "pkg": "com.tianque.cmm.app.main",
+      "pkg": "com.wayj.example.app.main",
       "rules": {
-        "": ".enter.LaunchActivity"
+        "": ".MainActivity"
       }
     },
     {
       "uri": "home",
-      "pkg": "com.tianque.cmm.app.home"
-    },
-    {
-      "uri": "mine",
-      "pkg": "com.tianque.cmm.app.mine"
+      "pkg": "com.wayj.example.app.home",
+      "rules": {
+        "myact": "com.wayj.example.app.home.activity.MyActivity"
+      }
     }
   ]
 }
