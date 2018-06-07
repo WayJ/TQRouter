@@ -17,6 +17,9 @@ out/
 .gradle/
 build/
 
+#SVN file
+.svn/
+
 # Local configuration file (sdk path, etc)
 local.properties
 

@@ -1,1 +1,1 @@
-include ':app',':lib.router', ':app.main', ':app.mine'
+include ':app',':lib.router', ':app.main', ':app.mine', ':lib.router.adapter-replugin'

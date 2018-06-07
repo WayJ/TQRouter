@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/app.main/app.main.iml" filepath="$PROJECT_DIR$/app.main/app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/app.mine/app.mine.iml" filepath="$PROJECT_DIR$/app.mine/app.mine.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib.router/lib.router.iml" filepath="$PROJECT_DIR$/lib.router/lib.router.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib.router.adapter-replugin/lib.router.adapter-replugin.iml" filepath="$PROJECT_DIR$/lib.router.adapter-replugin/lib.router.adapter-replugin.iml" />
     </modules>
   </component>
 </project>

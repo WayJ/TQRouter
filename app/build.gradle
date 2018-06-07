@@ -21,9 +21,10 @@ android {
 apply plugin: 'replugin-host-gradle'
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0'
-    compile project(':lib.router')
-    compile 'com.qihoo360.replugin:replugin-host-lib:2.2.4'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation project(':lib.router')
+    implementation project(':lib.router.adapter-replugin')
+    implementation 'com.qihoo360.replugin:replugin-host-lib:2.2.4'
 }

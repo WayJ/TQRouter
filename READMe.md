@@ -62,6 +62,15 @@
     TQRouter.openUri("main/login?userName=admin&password=123456")
 ```
 
+调用当前插件内部的Fragment
+
+```java
+	TQRouter.createFragment("main/fragmentA",context);
+	TQRouter.createFragmentV4("main/fragmentA",context);
+	TQRouter.createObject("fragment","main/fragmentA",context);  
+	TQRouter.createObject("fragment-v4","main/fragmentA",context); 
+```
+
 JSON路由配置
 
 请将router.json配置文件存放到 宿主的assets文件下，插件也可以放在自己的assets下
@@ -70,7 +79,6 @@ JSON路由配置
 {
   "version": "1.0.0",
   "bundles": [
-
     {
       "uri": "main",
       "pkg": "com.tianque.cmm.app.main",
@@ -84,7 +92,10 @@ JSON路由配置
     },
     {
       "uri": "mine",
-      "pkg": "com.tianque.cmm.app.mine"
+      "pkg": "com.tianque.cmm.app.mine",
+        "rules":{
+            "mainFragment":".MainFragment"
+        }
     }
   ]
 }
