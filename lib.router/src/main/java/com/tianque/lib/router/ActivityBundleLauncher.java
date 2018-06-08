@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 
 public class ActivityBundleLauncher extends BundleLauncher {
 
+
+
     @Override
     public <T> T createObject(Postcard postcard, Context context, String type) {
         if (type.startsWith("fragment")) {

@@ -2,6 +2,9 @@ package com.tianque.lib.router;
 
 import android.net.Uri;
 
+import com.tianque.lib.router.post.OnPostResultListener;
+import com.tianque.lib.router.post.PostRequest;
+
 public final class Postcard  {
     private Uri uri;
     private Object tag;             // A tag prepare for some thing wrong.
@@ -23,6 +26,7 @@ public final class Postcard  {
 //    private Map<String, Integer> paramsType;  // Param type
 //    // ......
 
+    private PostRequest postRequest;
 
     public Uri getUri() {
         return uri;
@@ -63,5 +67,13 @@ public final class Postcard  {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public PostRequest getPostRequest() {
+        return postRequest;
+    }
+
+    public void setPostRequest(PostRequest postRequest) {
+        this.postRequest = postRequest;
     }
 }

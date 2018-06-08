@@ -17,44 +17,35 @@
 
 ## 初始化、使用
 
-宿主中初始化
-```java
+依赖
 
+```
+    implementation project(':lib.router')
+    //replugin 中使用请依赖router.adapter-replugin
+    implementation project(':lib.router.adapter-replugin')
+```
+
+宿主中初始化
+
+```java
     //放到host的Application的OnCreate方法
     @Override
 	public void onCreate() {
 		super.onCreate();
-	    TQRouter.setRouterLauncher(new RePluginLauncher());
+        //Replugin 使用：要在setUp前先注册RepluginActivityLauncher
+	    TQRouter.setRouterLauncher(new RepluginActivityLauncher());
 	    TQRouter.setUp(this);
 	}
 
-	class RePluginLauncher extends BundleLauncher{
-
-        @Override
-        public void launchBundle(Bundle bundle, Context context, Postcard postcard) {
-            String mainPluginName=bundle.getPackageName();
-            //检测插件是否安装
-            if (RePlugin.isPluginInstalled(mainPluginName)) {
-                Intent intent = RePlugin.createIntent(mainPluginName, postcard.getPath());
-                if(TextUtils.isEmpty(postcard.getQuery())){
-					intent.putExtra(TQRouter.KEY_QUERY, '?'+postcard.getQuery());
-				}
-                //启动插件
-                RePlugin.startActivity(context, intent);
-            }else{
-                return;
-            }
-        }
-
-	}
-
 ```
 
-插件主动注册自己
 
-```java
-    TQRouter.register(this);
-```
+
+插件主动注册自己（弃，因为宿主中不一定有插件，可能需要下载插件后再调用，目前还是在宿主中维护总路由表router.json，更新通过网络下发）
+
+~~TQRouter.register(this);~~
+
+
 
 调用路由跳转activity
 
@@ -70,6 +61,26 @@
 	TQRouter.createObject("fragment","main/fragmentA",context);  
 	TQRouter.createObject("fragment-v4","main/fragmentA",context); 
 ```
+
+带result的activity跳转可用getIntentOfUri获得Intent对象
+
+```
+TQRouter.getIntentOfUri
+```
+
+<p> 探索中,期望通过如下API来调用带result的activity跳转</p> 
+
+```
+TQRouter.openUriWithResult(FragmentManager,OnPostResultListener)
+```
+
+<p> 预期方案：
+
+1. Hook onActivityResult方法，路由框架[OkDeepLink](https://www.jianshu.com/p/8a3eeeaf01e8)中采用了该方案
+2. BaseActivity中onActivityResult中做转发和处理,[参考](https://blog.csdn.net/wanyouzhi/article/details/78533888)
+3. 通过一个中转的Activity（弃，空白activity也要耗时0.1秒）或中转Fragment（预计[采用方案](https://blog.csdn.net/gengqiquan/article/details/74331845)）</p> 
+
+
 
 JSON路由配置
 

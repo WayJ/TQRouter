@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.tianque.lib.router.post.OnPostResultListener;
+import com.tianque.lib.router.post.PostRequest;
+
 import java.util.Map;
 
 public class TQRouter {
@@ -84,6 +87,44 @@ public class TQRouter {
         // Small url schemes
         Postcard postcard = Bundle.makePostcard(uri);
         if (postcard != null) {
+            postcard.getBundle().launchFrom(context,postcard);
+            return true;
+        }
+        return false;
+    }
+
+
+    public static boolean openUriWithResult(String uriString, Context context,android.app.FragmentManager fragmentManager,OnPostResultListener onPostResultListener) {
+        PostRequest postRequest=new PostRequest();
+        postRequest.setFragmentManager(fragmentManager);
+        postRequest.setOnPostResultListener(onPostResultListener);
+        return openUriWithResult(makeUri(uriString), context,postRequest);
+    }
+
+    public static boolean openUriWithResult(String uriString, Context context,android.support.v4.app.FragmentManager fragmentManager,OnPostResultListener onPostResultListener) {
+        PostRequest postRequest=new PostRequest();
+        postRequest.setV4FragmentManager(fragmentManager);
+        postRequest.setOnPostResultListener(onPostResultListener);
+        return openUriWithResult(makeUri(uriString), context,postRequest);
+    }
+
+    public static boolean openUriWithResult(Uri uri, Context context,PostRequest postRequest) {
+        // System url schemes
+        String scheme = uri.getScheme();
+        if (scheme != null
+                && !scheme.equals("http")
+                && !scheme.equals("https")
+                && !scheme.equals("file")) {
+            ApplicationUtils.openUri(uri, context);
+            return true;
+        }
+
+        // Small url schemes
+        Postcard postcard = Bundle.makePostcard(uri);
+        if (postcard != null) {
+            if(postRequest!=null){
+                postcard.setPostRequest(postRequest);
+            }
             postcard.getBundle().launchFrom(context,postcard);
             return true;
         }
