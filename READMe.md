@@ -20,9 +20,14 @@
 依赖
 
 ```
-    implementation project(':lib.router')
+
+	
+    implementation 'com.wayj.tqrouter:tqrouter:0.1.0'
+    implementation 'com.wayj.tqrouter:adapter-replugin:0.1.0'
+    
+    //implementation project(':lib.router')
     //replugin 中使用请依赖router.adapter-replugin
-    implementation project(':lib.router.adapter-replugin')
+    //implementation project(':lib.router.adapter-replugin')
 ```
 
 宿主中初始化
