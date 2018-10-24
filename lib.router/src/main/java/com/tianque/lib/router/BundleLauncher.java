@@ -3,6 +3,7 @@ package com.tianque.lib.router;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -34,7 +35,7 @@ public abstract class BundleLauncher {
     public void loadBundle(Bundle bundle) { }
 
 
-    public void prelaunchBundle(Bundle bundle) { }
+    public void prelaunchBundle(Bundle bundle, Context context) { }
 
 
     public void launchBundle(Bundle bundle, Context context, Postcard postcard) {
@@ -44,14 +45,15 @@ public abstract class BundleLauncher {
             return;
         }
 
+        Intent intent=createIntent(context,postcard);
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
-            if (shouldFinishPreviousActivity(activity)) {
-                activity.finish();
-            }
-            activity.startActivityForResult(bundle.getIntent(), TQRouter.REQUEST_CODE_DEFAULT);
+//            if (shouldFinishPreviousActivity(activity)) {
+//                activity.finish();
+//            }
+            activity.startActivityForResult(intent, TQRouter.REQUEST_CODE_DEFAULT);
         } else {
-            context.startActivity(bundle.getIntent());
+            context.startActivity(intent);
         }
     }
 
@@ -80,4 +82,6 @@ public abstract class BundleLauncher {
         }
         return false;
     }
+
+    public abstract Intent createIntent(Context context, Postcard postcard);
 }

@@ -1,5 +1,6 @@
 package com.tianque.lib.router;
 
+import android.content.Intent;
 import android.net.Uri;
 
 import com.tianque.lib.router.post.OnPostResultListener;
@@ -25,6 +26,8 @@ public final class Postcard  {
 //    private int extra;              // Extra data
 //    private Map<String, Integer> paramsType;  // Param type
 //    // ......
+
+//    private Intent intent;
 
     private PostRequest postRequest;
 
@@ -76,4 +79,12 @@ public final class Postcard  {
     public void setPostRequest(PostRequest postRequest) {
         this.postRequest = postRequest;
     }
+
+//    public Intent getIntent() {
+//        return intent;
+//    }
+//
+//    public void setIntent(Intent intent) {
+//        this.intent = intent;
+//    }
 }

@@ -1,5 +1,5 @@
-apply plugin: 'com.android.application'
-apply plugin: 'replugin-plugin-gradle'
+apply plugin: 'com.android.library'
+//apply plugin: 'replugin-plugin-gradle'
 
 android {
     compileSdkVersion 27
@@ -7,7 +7,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.way.router.example.app.main"
+//        applicationId "com.way.router.example.app.main"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
@@ -20,13 +20,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
+
 
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.qihoo360.replugin:replugin-plugin-lib:2.2.4'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
+//    implementation 'com.qihoo360.replugin:replugin-plugin-lib:2.2.4'
 
 }

@@ -2,9 +2,9 @@ package com.tianque.lib.router.post;
 
 
 public class PostRequest {
-    OnPostResultListener onPostResultListener;
-    android.support.v4.app.FragmentManager v4FragmentManager;
-    android.app.FragmentManager fragmentManager;
+    private OnPostResultListener onPostResultListener;
+    private android.support.v4.app.FragmentManager v4FragmentManager;
+    private android.app.FragmentManager fragmentManager;
 
     public OnPostResultListener getOnPostResultListener() {
         return onPostResultListener;

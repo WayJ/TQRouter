@@ -95,7 +95,7 @@ public class Bundle {
     private String uriString;
     private Uri uri;
     private URL url; // for WebBundleLauncher
-    private Intent mIntent;
+//    private Intent mIntent;
     private String type;
     private String path;
     private String query;
@@ -370,9 +370,9 @@ public class Bundle {
                 savePatchManifestFile(patchManifestFile,manifestJson);
                 // Clear cache
                 setCacheManifest(null);
-            } else if (patchManifestFile.exists()) {
-                // Load from patch
-                manifestJson = readPatchManifestFile(patchManifestFile);
+//            } else if (patchManifestFile.exists()) {
+//                // Load from patch
+//                manifestJson = readPatchManifestFile(patchManifestFile);
             } else {
                 // Load from built-in `assets/bundle.json'
                 builtinManifestStream = context.getAssets().open(BUNDLE_MANIFEST_NAME);
@@ -735,32 +735,30 @@ public class Bundle {
         }
     }
 
-    //
     protected void launchFrom(Context context, Postcard postcard) {
         if (mApplicableLauncher != null) {
             mApplicableLauncher.launchBundle(this, context, postcard);
         }
     }
 
-    protected Intent createIntent(Context context) {
+    protected Intent createIntent(Context context, Postcard postcard) {
         if (mApplicableLauncher == null) {
             prepareForLaunch();
         }
         if (mApplicableLauncher != null) {
-            mApplicableLauncher.prelaunchBundle(this);
+            return mApplicableLauncher.createIntent(context,postcard);
         }
-
-        return mIntent;
+        return null;
     }
 
     //
-    protected Intent getIntent() {
-        return mIntent;
-    }
-
-    protected void setIntent(Intent intent) {
-        mIntent = intent;
-    }
+//    protected Intent getIntent() {
+//        return mIntent;
+//    }return
+//
+//    protected void setIntent(Intent intent) {
+//        mIntent = intent;
+//    }
 
     public String getPackageName() {
         return mPackageName;

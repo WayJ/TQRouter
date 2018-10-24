@@ -36,18 +36,20 @@ public class TQRouter {
     }
 
 
-    public static void setUp(Context context){
-        setUp(context,null,null);
+    public static void setUp(Context context) {
+        setUp(context, null, null);
     }
 
 
-    public static void setUp(Context context, BundleLauncher bundleLauncher){
-        setUp(context,bundleLauncher,null);
+    public static void setUp(Context context, BundleLauncher bundleLauncher) {
+        setUp(context, bundleLauncher, null);
     }
 
-    public static void setUp(Context context,BundleLauncher bundleLauncher, OnCompleteListener listener) {
+    public static void setUp(Context context, BundleLauncher bundleLauncher, OnCompleteListener listener) {
         mContext = context;
-        if(bundleLauncher!=null) setRouterLauncher(bundleLauncher);
+        if (bundleLauncher != null) setRouterLauncher(bundleLauncher);
+        else
+            setRouterLauncher(new ActivityBundleLauncher());
         if (sHasSetUp) {
             if (listener != null) {
                 listener.onComplete();
@@ -61,11 +63,11 @@ public class TQRouter {
     /**
      * 用来注册插件的路由地址，由不同的插件来调用
      */
-    public static void register(Context context){
+    public static void register(Context context) {
         Bundle.registerSubBundles(context);
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return mContext;
     }
 
@@ -87,28 +89,28 @@ public class TQRouter {
         // Small url schemes
         Postcard postcard = Bundle.makePostcard(uri);
         if (postcard != null) {
-            postcard.getBundle().launchFrom(context,postcard);
+            postcard.getBundle().launchFrom(context, postcard);
             return true;
         }
         return false;
     }
 
 
-    public static boolean openUriWithResult(String uriString, Context context,android.app.FragmentManager fragmentManager,OnPostResultListener onPostResultListener) {
-        PostRequest postRequest=new PostRequest();
+    public static boolean openUriWithResult(String uriString, Context context, android.app.FragmentManager fragmentManager, OnPostResultListener onPostResultListener) {
+        PostRequest postRequest = new PostRequest();
         postRequest.setFragmentManager(fragmentManager);
         postRequest.setOnPostResultListener(onPostResultListener);
-        return openUriWithResult(makeUri(uriString), context,postRequest);
+        return openUriWithResult(makeUri(uriString), context, postRequest);
     }
 
-    public static boolean openUriWithResult(String uriString, Context context,android.support.v4.app.FragmentManager fragmentManager,OnPostResultListener onPostResultListener) {
-        PostRequest postRequest=new PostRequest();
+    public static boolean openUriWithResult(String uriString, Context context, android.support.v4.app.FragmentManager fragmentManager, OnPostResultListener onPostResultListener) {
+        PostRequest postRequest = new PostRequest();
         postRequest.setV4FragmentManager(fragmentManager);
         postRequest.setOnPostResultListener(onPostResultListener);
-        return openUriWithResult(makeUri(uriString), context,postRequest);
+        return openUriWithResult(makeUri(uriString), context, postRequest);
     }
 
-    public static boolean openUriWithResult(Uri uri, Context context,PostRequest postRequest) {
+    public static boolean openUriWithResult(Uri uri, Context context, PostRequest postRequest) {
         // System url schemes
         String scheme = uri.getScheme();
         if (scheme != null
@@ -122,10 +124,10 @@ public class TQRouter {
         // Small url schemes
         Postcard postcard = Bundle.makePostcard(uri);
         if (postcard != null) {
-            if(postRequest!=null){
+            if (postRequest != null) {
                 postcard.setPostRequest(postRequest);
             }
-            postcard.getBundle().launchFrom(context,postcard);
+            postcard.getBundle().launchFrom(context, postcard);
             return true;
         }
         return false;
@@ -146,19 +148,19 @@ public class TQRouter {
         }
 
         // Small url schemes
-        Bundle bundle = Bundle.getLaunchableBundle(uri);
-        if (bundle != null) {
-            return bundle.createIntent(context);
+        Postcard postcard = Bundle.makePostcard(uri);
+        if (postcard != null) {
+            return postcard.getBundle().createIntent(context, postcard);
         }
         return null;
     }
 
-    public static <T> T createFragment(String uriString, Context context){
-        return createObject("fragment",uriString,context);
+    public static <T> T createFragment(String uriString, Context context) {
+        return createObject("fragment", uriString, context);
     }
 
-    public static <T> T createFragmentV4(String uriString, Context context){
-        return createObject("fragment-v4",uriString,context);
+    public static <T> T createFragmentV4(String uriString, Context context) {
+        return createObject("fragment-v4", uriString, context);
     }
 
     public static <T> T createObject(String type, String uriString, Context context) {
@@ -168,7 +170,7 @@ public class TQRouter {
     public static <T> T createObject(String type, Uri uri, Context context) {
         Postcard postcard = Bundle.makePostcard(uri);
         if (postcard != null) {
-            return postcard.getBundle().createObject(postcard,context, type);
+            return postcard.getBundle().createObject(postcard, context, type);
         }
         return null;
     }
@@ -192,7 +194,6 @@ public class TQRouter {
     public static String getBaseUri() {
         return sBaseUri;
     }
-
 
 
     public static SharedPreferences getSharedPreferences() {

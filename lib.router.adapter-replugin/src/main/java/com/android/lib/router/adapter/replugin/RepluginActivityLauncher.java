@@ -10,6 +10,7 @@ import com.tianque.lib.router.ActivityBundleLauncher;
 import com.tianque.lib.router.Bundle;
 import com.tianque.lib.router.Postcard;
 import com.tianque.lib.router.TQRouter;
+//import com.tianque.lib.router.post.PostResultFragmentHelper;
 
 public class RepluginActivityLauncher extends ActivityBundleLauncher {
 
@@ -21,15 +22,23 @@ public class RepluginActivityLauncher extends ActivityBundleLauncher {
             // 用了intent.resolveActivity来检测，是否有更好的方式
             Intent intent = new Intent();
             intent.setComponent(new ComponentName(context, postcard.getPath()));
+            if (!TextUtils.isEmpty(postcard.getQuery())) {
+                intent.putExtra(TQRouter.KEY_QUERY, '?' + postcard.getQuery());
+            }
             if(intent.resolveActivity(context.getPackageManager())!=null){
-                context.startActivity(intent);
+                if(postcard.getPostRequest()!=null){
+//                    PostResultFragmentHelper.startPostResult(intent,postcard.getPostRequest());
+
+                }else
+                    context.startActivity(intent);
+                return;
             }
         }
 
         //检测插件是否安装
         if (RePlugin.isPluginInstalled(mainPluginName)) {
             Intent repluginIntent = RePlugin.createIntent(mainPluginName, postcard.getPath());
-            if (TextUtils.isEmpty(postcard.getQuery())) {
+            if (!TextUtils.isEmpty(postcard.getQuery())) {
                 repluginIntent.putExtra(TQRouter.KEY_QUERY, '?' + postcard.getQuery());
             }
             //启动插件

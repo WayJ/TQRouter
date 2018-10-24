@@ -17,7 +17,8 @@ public class MainActivity extends AppCompatActivity {
         ((Button)findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TQRouter.openUri("main",MainActivity.this);
+//                TQRouter.openUri("main",MainActivity.this);
+                startActivity(TQRouter.getIntentOfUri("main",MainActivity.this));
             }
         });
     }
