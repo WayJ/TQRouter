@@ -506,10 +506,20 @@ public class Bundle {
 //    }
 
     protected static Postcard makePostcard(Uri uri) {
+        return makePostcard(uri,false);
+    }
+
+    /**
+     *
+     * @param uri
+     * @param outDefault 排除默认情况，如.MainActivity
+     * @return
+     */
+    protected static Postcard makePostcard(Uri uri,boolean outDefault) {
         if (sPreloadBundles != null) {
             Postcard postcard;
             for (Bundle bundle : sPreloadBundles) {
-                postcard = bundle.matchesRule(uri);
+                postcard = bundle.matchesRule(uri,outDefault);
                 if (postcard != null) {
                     if (bundle.mApplicableLauncher == null) {
                         bundle.mApplicableLauncher = TQRouter.routerLauncher;
@@ -554,7 +564,7 @@ public class Bundle {
         return null;
     }
 
-    private Postcard matchesRule(Uri uri) {
+    private Postcard matchesRule(Uri uri,boolean outDefault) {
         /* e.g.
          *  input
          *      - uri: http://base/abc.html
@@ -563,7 +573,7 @@ public class Bundle {
          *  output
          *      - target => AbcController
          */
-        Postcard postcard = null;
+        Postcard postcard ;
         String uriString = uri.toString();
         if (this.uriString == null || !uriString.startsWith(this.uriString)) return null;
 
@@ -578,13 +588,16 @@ public class Bundle {
 
         String dstPath = null;
         String dstQuery = srcQuery;
-
-        for (String key : this.rules.keySet()) {
-            // TODO: regex match and replace
-            if (key.equals(srcPath)) dstPath = this.rules.get(key);
-            if (dstPath != null) break;
+        if(TextUtils.isEmpty(srcPath)&&outDefault){
+            dstPath="";
+        }else {
+            for (String key : this.rules.keySet()) {
+                // TODO: regex match and replace
+                if (key.equals(srcPath)) dstPath = this.rules.get(key);
+                if (dstPath != null) break;
+            }
+            if (dstPath == null) return null;
         }
-        if (dstPath == null) return null;
 
         int index = dstPath.indexOf("?");
         if (index > 0) {
@@ -598,10 +611,16 @@ public class Bundle {
 
         this.path = dstPath;
         this.query = dstQuery;
-        postcard.setPath(getActivityName(dstPath));
+        if(!(TextUtils.isEmpty(srcPath)&&outDefault)){
+            postcard.setPath(getActivityName(dstPath));
+        }
         postcard.setQuery(dstQuery);
 
         return postcard;
+    }
+
+    private Postcard matchesRule(Uri uri) {
+        return matchesRule(uri,false);
     }
 
     //______________________________________________________________________________

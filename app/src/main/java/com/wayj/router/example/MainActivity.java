@@ -18,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                TQRouter.openUri("main",MainActivity.this);
-                startActivity(TQRouter.getIntentOfUri("main",MainActivity.this));
+                TQRouter.createFragmentV4("main",MainActivity.this);
+//                startActivity(TQRouter.getIntentOfUri("main",MainActivity.this));
             }
         });
     }

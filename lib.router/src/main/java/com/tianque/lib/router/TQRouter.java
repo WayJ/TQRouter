@@ -168,7 +168,7 @@ public class TQRouter {
     }
 
     public static <T> T createObject(String type, Uri uri, Context context) {
-        Postcard postcard = Bundle.makePostcard(uri);
+        Postcard postcard = Bundle.makePostcard(uri,true);
         if (postcard != null) {
             return postcard.getBundle().createObject(postcard, context, type);
         }

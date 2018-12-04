@@ -3,7 +3,7 @@ apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "27.0.3"
+//    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 9
@@ -20,12 +20,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    provided project(':lib.router')
-    provided 'com.android.support:appcompat-v7:26.0.1'
+    compileOnly project(':lib.router')
+    compileOnly 'com.android.support:appcompat-v7:26.0.1'
 
-    provided 'com.qihoo360.replugin:replugin-host-lib:2.2.4'
+    compileOnly 'com.qihoo360.replugin:replugin-host-lib:2.2.4'
 //    compileOnly deps.replugin.plugin
 }
 

@@ -22,8 +22,8 @@
 ```
 
 	
-    implementation 'com.wayj.tqrouter:tqrouter:0.1.0'
-    implementation 'com.wayj.tqrouter:adapter-replugin:0.1.0'
+    implementation 'com.wayj.tqrouter:tqrouter:0.1.3'
+    implementation 'com.wayj.tqrouter:adapter-replugin:0.1.3'
     
     //implementation project(':lib.router')
     //replugin 中使用请依赖router.adapter-replugin
@@ -39,6 +39,8 @@
 		super.onCreate();
         //Replugin 使用：要在setUp前先注册RepluginActivityLauncher
 	    TQRouter.setRouterLauncher(new RepluginActivityLauncher());
+        //普通项目中
+	    TQRouter.setRouterLauncher(new ActivityBundleLauncher());
 	    TQRouter.setUp(this);
 	}
 

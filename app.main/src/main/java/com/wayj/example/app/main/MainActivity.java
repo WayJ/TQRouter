@@ -1,4 +1,4 @@
-package com.way.example.app.mine;
+package com.wayj.example.app.main;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

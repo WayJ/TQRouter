@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+
 import java.io.File;
 import java.util.HashSet;
 
@@ -36,13 +37,12 @@ public class ActivityBundleLauncher extends BundleLauncher {
             }
             if (type.endsWith("v4")) {
                 return (T) android.support.v4.app.Fragment.instantiate(context, fname);
-            }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 return (T) android.app.Fragment.instantiate(context, fname);
             }
         }
         return super.createObject(postcard, context, type);
     }
-
 
 
     @Override
@@ -52,7 +52,7 @@ public class ActivityBundleLauncher extends BundleLauncher {
 
             return;
         }
-        Intent intent=createIntent(context,postcard);
+        Intent intent = createIntent(context, postcard);
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
 //            if (shouldFinishPreviousActivity(activity)) {
@@ -88,11 +88,11 @@ public class ActivityBundleLauncher extends BundleLauncher {
         // Intent extras - params
         String query = postcard.getQuery();
         if (query != null) {
-            intent.putExtra(TQRouter.KEY_QUERY, '?'+query);
+            intent.putExtra(TQRouter.KEY_QUERY, '?' + query);
         }
-        if(intent.resolveActivity(context.getPackageManager())!=null){
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
             return intent;
-        }else
+        } else
             return null;
     }
 }
