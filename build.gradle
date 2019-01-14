@@ -40,7 +40,7 @@ ext {
     userOrg = 'wayj'
     groupId = 'com.wayj.tqrouter'
     uploadName = 'TQRouter'
-    publishVersion = '0.1.3'
+    publishVersion = '0.1.5'
     desc = 'fix bug:create fragment'
     website = 'https://github.com/WayJ/TQRouter'
     licences = ['Apache-2.0']

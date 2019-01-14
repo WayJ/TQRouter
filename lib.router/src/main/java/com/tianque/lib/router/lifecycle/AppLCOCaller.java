@@ -10,7 +10,7 @@ import java.util.Map;
 public class AppLCOCaller {
     private Map<String, AppLCObserver> appLCObservers;
 
-    public void addLCObserver(AppLCObserver observer) {
+    public AppLCOCaller addLCObserver(AppLCObserver observer) {
         if (appLCObservers == null)
             appLCObservers = new HashMap();
         if (!TextUtils.isEmpty(observer.getTag())) {
@@ -18,6 +18,7 @@ public class AppLCOCaller {
         } else {
             Log.e("tqrouter", "null tag :" + observer.getClass().getName());
         }
+        return this;
     }
 
     public Map<String, AppLCObserver> getAppLCObservers() {
