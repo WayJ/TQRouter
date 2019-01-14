@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import com.tianque.lib.router.lifecycle.AppLCOCaller;
 import com.tianque.lib.router.post.OnPostResultListener;
 import com.tianque.lib.router.post.PostRequest;
 
@@ -14,6 +15,7 @@ import java.util.Map;
 public class TQRouter {
     public static Context mContext;
     public static BundleLauncher routerLauncher;
+    public static AppLCOCaller appLCOCaller;
     public static final String KEY_QUERY = "tqrouter-query";
     public static final int REQUEST_CODE_DEFAULT = 10000;
     private static final String SHARED_PREFERENCES_SMALL = "tqrouter";
@@ -50,6 +52,7 @@ public class TQRouter {
         if (bundleLauncher != null) setRouterLauncher(bundleLauncher);
         else
             setRouterLauncher(new ActivityBundleLauncher());
+        appLCOCaller=new AppLCOCaller();
         if (sHasSetUp) {
             if (listener != null) {
                 listener.onComplete();
@@ -58,6 +61,7 @@ public class TQRouter {
         }
         Bundle.loadLaunchableBundles(listener);
         sHasSetUp = true;
+        appLCOCaller.callOnSetup();
     }
 
     /**
@@ -219,5 +223,9 @@ public class TQRouter {
             uriString = sBaseUri + uriString;
         }
         return Uri.parse(uriString);
+    }
+
+    public static AppLCOCaller getAppLCOCaller() {
+        return appLCOCaller;
     }
 }

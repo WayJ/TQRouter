@@ -25,6 +25,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.tianque.lib.router.lifecycle.AppLCOCaller;
+import com.tianque.lib.router.lifecycle.AppLCObserver;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,7 +72,7 @@ public class Bundle {
     private static final String BUNDLE_MANIFEST_NAME = "router.json";
     private static final String VERSION_KEY = "version";
     private static final String BUNDLES_KEY = "bundles";
-    private static final String HOST_PACKAGE = "main";
+//    private static final String HOST_PACKAGE = "main";
     private static final String DEFAULT_ENTRANCE_PATH = "";
     private static final String DEFAULT_ENTRANCE_PATH2 = "/";
     private static final String DEFAULT_ENTRANCE_ACTIVITY = ".MainActivity";
@@ -680,24 +683,20 @@ public class Bundle {
         if (map.has("pkg")) {
             String pkg = map.getString("pkg");
             if (pkg != null
-//                    && !pkg.equals(HOST_PACKAGE)
+                    //&& !pkg.equals(HOST_PACKAGE)
                     ) {
                 mPackageName = pkg;
-//                if (Small.isLoadFromAssets()) {
-//                    mBuiltinAssetName = pkg + ".apk";
-//                    mBuiltinFile = new File(FileUtils.getInternalBundlePath(), mBuiltinAssetName);
-//                    mPatchFile = new File(FileUtils.getDownloadBundlePath(), mBuiltinAssetName);
-//                    // Extract from assets to files
-////                    try {
-////                        extractBundle(mBuiltinAssetName, mBuiltinFile);
-////                    } catch (IOException e) {
-////                        e.printStackTrace();
-////                    }
-//                } else {
-//                    String soName = "lib" + pkg.replaceAll("\\.", "_") + ".so";
-//                    mBuiltinFile = new File(sUserBundlesPath, soName);
-//                    mPatchFile = new File(FileUtils.getDownloadBundlePath(), soName);
-//                }
+                //find AppLCObserver
+                String defaultAppLCOName = mPackageName+".AppObserver";
+                try {
+                    Class appObserver = Class.forName(defaultAppLCOName);
+                    if(AppLCObserver.class.isAssignableFrom(appObserver)){
+                        TQRouter.appLCOCaller.addLCObserver((AppLCObserver) appObserver.newInstance());
+                    }
+                } catch (ClassNotFoundException e) {
+                } catch (IllegalAccessException e) {
+                } catch (InstantiationException e) {
+                }
             }
         }
 
@@ -752,6 +751,8 @@ public class Bundle {
 //                }
 //            }
         }
+
+
     }
 
     protected void launchFrom(Context context, Postcard postcard) {
@@ -952,9 +953,9 @@ public class Bundle {
         sPreloadBundles = bundles;
 
         // Prepare bundle
-//        for (Bundle bundle : bundles) {
-//            bundle.prepareForLaunch();
-//        }
+        for (Bundle bundle : bundles) {
+            bundle.prepareForLaunch();
+        }
 
 //        // Handle I/O
 //        if (sIOActions != null) {

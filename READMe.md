@@ -42,17 +42,41 @@
         //普通项目中
 	    TQRouter.setRouterLauncher(new ActivityBundleLauncher());
 	    TQRouter.setUp(this);
+	    
+	    //AppLCObserver 调用
+	    TQRouter.getAppLCOCaller().callOnCreate(this);
 	}
+	
+	@Override
+    public void onTerminate() {
+        super.onTerminate();
+        TQRouter.getAppLCOCaller().callOnStop();//可以做一些结束操作
+    }
 
 ```
 
+AppLCObserver 用来在你的模块中能够调用到host的application的生命周期
+默认查找该类的classname为 module包名下的AppObserver类，暂无设置功能，例如"com.wayj.example.app.main.AppObserver"
+```
+public interface AppLCObserver {
+    /**
+     * 这里必须返回一个tag，可以是模块名，也可以是具体的功能，比如单独初始化bugly的类，tag应设置为bugly。会用这个tag做重复筛选和异常控制
+     * @return
+     */
+    String getTag();
 
-
-插件主动注册自己（弃，因为宿主中不一定有插件，可能需要下载插件后再调用，目前还是在宿主中维护总路由表router.json，更新通过网络下发）
-
-~~TQRouter.register(this);~~
-
-
+    /**
+     * 可以通过AppLCOCaller.addLCObserver 来在一个模块中添加多个AppLCObserver
+     * 建议做法，每一个复杂的组件的初始化单独放一个AppLCObserver，通过tag来区分
+     * 例如：BuglyAppObserver,BaiduMapAppObserver。然后通过onSetup方法加入到AppLCOCaller中
+     * 对于tag相同的Observer，仅加载最后一个
+     * @param lcoCaller
+     */
+    void onSetup(AppLCOCaller lcoCaller);
+    void onCreate(Application application);
+    void onStop();
+}
+```
 
 调用路由跳转activity
 
@@ -75,17 +99,11 @@
 TQRouter.getIntentOfUri
 ```
 
-<p> 探索中,期望通过如下API来调用带result的activity跳转</p> 
-
+(开发中)通过如下API来调用带result的activity跳转</p> 
 ```
 TQRouter.openUriWithResult(FragmentManager,OnPostResultListener)
 ```
-
-<p> 预期方案：
-
-1. Hook onActivityResult方法，路由框架[OkDeepLink](https://www.jianshu.com/p/8a3eeeaf01e8)中采用了该方案
-2. BaseActivity中onActivityResult中做转发和处理,[参考](https://blog.csdn.net/wanyouzhi/article/details/78533888)
-3. 通过一个中转的Activity（弃，空白activity也要耗时0.1秒）或中转Fragment（预计[采用方案](https://blog.csdn.net/gengqiquan/article/details/74331845)）</p> 
+通过一个中转Fragment（[采用方案](https://blog.csdn.net/gengqiquan/article/details/74331845)）</p> 
 
 
 

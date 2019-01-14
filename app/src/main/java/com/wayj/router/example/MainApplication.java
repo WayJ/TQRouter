@@ -8,15 +8,22 @@ import com.tianque.lib.router.TQRouter;
 
 public class MainApplication extends Application {
 
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();
 
 //        TQRouter.setRouterLauncher(new ActivityBundleLauncher());
         TQRouter.setUp(this);
+        TQRouter.getAppLCOCaller().callOnCreate(this);
 
     }
 
-
-
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        TQRouter.getAppLCOCaller().callOnStop();
+    }
 }
