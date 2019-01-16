@@ -3,7 +3,7 @@
   "bundles": [
     {
       "uri": "mine",
-      "pkg": "com.tianque.cmm.app.mine"
+      "pkg": "com.wayj.example.app.mine"
     }
   ]
 }

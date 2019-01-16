@@ -27,7 +27,10 @@ public class AppLCOCaller {
 
     public void callOnSetup() {
         for (AppLCObserver appLCObserver : appLCObservers.values()) {
-            appLCObserver.onSetup(this);
+            if (!appLCObserver.isSetuped()) {
+                appLCObserver.onSetup(this);
+                appLCObserver.setSetuped(true);
+            }
         }
     }
 
@@ -41,5 +44,9 @@ public class AppLCOCaller {
         for (AppLCObserver appLCObserver : appLCObservers.values()) {
             appLCObserver.onStop();
         }
+    }
+
+    public void loadBundles(String routerFileName) {
+
     }
 }

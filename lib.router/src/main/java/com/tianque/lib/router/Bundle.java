@@ -24,6 +24,7 @@ import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tianque.lib.router.lifecycle.AppLCOCaller;
 import com.tianque.lib.router.lifecycle.AppLCObserver;
@@ -43,6 +44,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -108,10 +110,10 @@ public class Bundle {
 
     private BundleLauncher mApplicableLauncher = null;
 
-    private String mBuiltinAssetName = null;
-    private File mBuiltinFile = null;
-    private File mPatchFile = null;
-    private File mExtractPath;
+//    private String mBuiltinAssetName = null;
+//    private File mBuiltinFile = null;
+//    private File mPatchFile = null;
+//    private File mExtractPath;
 
     private boolean launchable = true;
     private boolean enabled = true;
@@ -121,20 +123,6 @@ public class Bundle {
 
 //    private BundleParser parser;
 
-    //______________________________________________________________________________
-    // Class methods
-
-    //    /**
-//     * @deprecated Use {@link TQRouter#getBundle} instead.
-//     * @param name
-//     * @return
-//     */
-//    public static Bundle findByName(String name) {
-//        Bundle bundle = findBundle(name, sPreloadBundles);
-//        if (bundle != null) return bundle;
-//        return findBundle(name, sUpdatingBundles);
-//    }
-//
     private static Bundle findBundle(String name, List<Bundle> bundles) {
         if (name == null) return null;
         if (bundles == null) return null;
@@ -204,98 +192,74 @@ public class Bundle {
         return true;
     }
 
-    public static boolean updateSubManifest(JSONObject data, boolean force) {
-        if (data == null) return false;
-
-        //replace and add to hostManifest
-        File patchManifestFile = getPatchManifestFile();
-        try {
-            JSONObject hostManifestJson=new JSONObject(readPatchManifestFile(patchManifestFile));
-            JSONArray bundleDescs = hostManifestJson.getJSONArray(BUNDLES_KEY);
-            int N = bundleDescs.length();
-            Map<String,JSONObject> bundleMap=new HashMap<>();
-            for (int i = 0; i < N; i++) {
-                try {
-                    JSONObject object = bundleDescs.getJSONObject(i);
-                    if (object.has("uri")) {
-                        bundleMap.put(object.getString("uri"),object);
-                    }
-                } catch (JSONException e) {
-                    // Ignored
-                }
-            }
-            bundleDescs = data.getJSONArray(BUNDLES_KEY);
-            N = bundleDescs.length();
-            for (int i = 0; i < N; i++) {
-                try {
-                    JSONObject object = bundleDescs.getJSONObject(i);
-                    if (object.has("uri")) {
-                        bundleMap.put(object.getString("uri"),object);
-                    }
-                } catch (JSONException e) {
-                    // Ignored
-                }
-            }
-            JSONArray jsonArray=new JSONArray();
-            Iterator<JSONObject> bundleArrayIt = bundleMap.values().iterator();
-            while (bundleArrayIt.hasNext()){
-                jsonArray.put(bundleArrayIt.next());
-            }
-            hostManifestJson.put(BUNDLES_KEY,jsonArray);
-            data=hostManifestJson;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Manifest manifest = parseManifest(data);
-        if (manifest == null) return false;
-
-        String manifestJson;
-        try {
-            manifestJson = data.toString(2);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        loadBundles(manifest.bundles);
-        if (force) {
-            // Save to file
-            try {
-                File manifestFile = getPatchManifestFile();
-                savePatchManifestFile(manifestFile,manifestJson);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-            // Update bundles
-//            for (Bundle bundle : manifest.bundles) {
-//                Bundle preloadBundle = findBundle(bundle.getPackageName(), sPreloadBundles);
-//                if (preloadBundle != null) {
-//                    // Update bundle
-//                    preloadBundle.uriString = bundle.uriString;
-//                    preloadBundle.uri = bundle.uri;
-//                    preloadBundle.rules = bundle.rules;
-//                }
-//            }
-        }
-//        else {
-//            // Temporary add bundle
-//            for (Bundle bundle : manifest.bundles) {
-//                Bundle preloadBundle = findBundle(bundle.getPackageName(), sPreloadBundles);
-//                if (preloadBundle == null) {
-//                    if (sUpdatingBundles == null) {
-//                        sUpdatingBundles = new ArrayList<Bundle>();
+//    public static boolean updateSubManifest(JSONObject data, boolean force) {
+//        if (data == null) return false;
+//
+//        //replace and add to hostManifest
+//        File patchManifestFile = getPatchManifestFile();
+//        try {
+//            JSONObject hostManifestJson=new JSONObject(readPatchManifestFile(patchManifestFile));
+//            JSONArray bundleDescs = hostManifestJson.getJSONArray(BUNDLES_KEY);
+//            int N = bundleDescs.length();
+//            Map<String,JSONObject> bundleMap=new HashMap<>();
+//            for (int i = 0; i < N; i++) {
+//                try {
+//                    JSONObject object = bundleDescs.getJSONObject(i);
+//                    if (object.has("uri")) {
+//                        bundleMap.put(object.getString("uri"),object);
 //                    }
-//                    sUpdatingBundles.add(bundle);
+//                } catch (JSONException e) {
+//                    // Ignored
 //                }
 //            }
-//            // Save to `SharedPreference'
-////            setCacheManifest(manifestJson);
+//            bundleDescs = data.getJSONArray(BUNDLES_KEY);
+//            N = bundleDescs.length();
+//            for (int i = 0; i < N; i++) {
+//                try {
+//                    JSONObject object = bundleDescs.getJSONObject(i);
+//                    if (object.has("uri")) {
+//                        bundleMap.put(object.getString("uri"),object);
+//                    }
+//                } catch (JSONException e) {
+//                    // Ignored
+//                }
+//            }
+//            JSONArray jsonArray=new JSONArray();
+//            Iterator<JSONObject> bundleArrayIt = bundleMap.values().iterator();
+//            while (bundleArrayIt.hasNext()){
+//                jsonArray.put(bundleArrayIt.next());
+//            }
+//            hostManifestJson.put(BUNDLES_KEY,jsonArray);
+//            data=hostManifestJson;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
 //        }
-        return true;
-    }
+//        Manifest manifest = parseManifest(data);
+//        if (manifest == null) return false;
+//
+//        String manifestJson;
+//        try {
+//            manifestJson = data.toString(2);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//        loadBundles(manifest.bundles);
+//        if (force) {
+//            // Save to file
+//            try {
+//                File manifestFile = getPatchManifestFile();
+//                savePatchManifestFile(manifestFile,manifestJson);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     private static String getCacheManifest() {
         return TQRouter.getSharedPreferences().getString(BUNDLE_MANIFEST_NAME, null);
@@ -324,7 +288,7 @@ public class Bundle {
 
         boolean synchronous = (listener == null);
         if (synchronous) {
-            loadBundles(context);
+            loadHostBundles(context);
             return;
         }
 
@@ -362,85 +326,19 @@ public class Bundle {
         return sb.toString();
     }
 
-    private static void loadBundles(Context context) {
-        JSONObject manifestData;
-        InputStream builtinManifestStream = null;
-        try {
-            File patchManifestFile = getPatchManifestFile();
-            String manifestJson = getCacheManifest();
-            if (manifestJson != null) {
-                // Load from cache and save as patch
-                savePatchManifestFile(patchManifestFile,manifestJson);
-                // Clear cache
-                setCacheManifest(null);
-//            } else if (patchManifestFile.exists()) {
-//                // Load from patch
-//                manifestJson = readPatchManifestFile(patchManifestFile);
-            } else {
-                // Load from built-in `assets/bundle.json'
-                builtinManifestStream = context.getAssets().open(BUNDLE_MANIFEST_NAME);
-                int builtinSize = builtinManifestStream.available();
-                byte[] buffer = new byte[builtinSize];
-                builtinManifestStream.read(buffer);
-                builtinManifestStream.close();
-                builtinManifestStream=null;
-                manifestJson = new String(buffer, 0, builtinSize);
-                //save cache
-                savePatchManifestFile(patchManifestFile,manifestJson);
-            }
-
-            // Parse manifest file
-            manifestData = new JSONObject(manifestJson);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }finally {
-            if(builtinManifestStream!=null) {
-                try {
-                    builtinManifestStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        Manifest manifest = parseManifest(manifestData);
-        if (manifest == null) return;
-
+    private static void loadHostBundles(Context context) {
+        Manifest manifest=readManifestFromFile(context,BUNDLE_MANIFEST_NAME);
 //        setupLaunchers(context);
-
+        if (manifest == null) return;
         loadBundles(manifest.bundles);
     }
 
-    public static boolean registerSubBundles(Context context) {
-        JSONObject manifestData;
-        InputStream builtinManifestStream=null;
-        try {
-            // Load from built-in `assets/bundle.json'
-            builtinManifestStream = context.getAssets().open(BUNDLE_MANIFEST_NAME);
-            int builtinSize = builtinManifestStream.available();
-            byte[] buffer = new byte[builtinSize];
-            builtinManifestStream.read(buffer);
-            builtinManifestStream.close();
-            builtinManifestStream=null;
-            String manifestJson = new String(buffer, 0, builtinSize);
-            
-            // Parse manifest file
-            manifestData = new JSONObject(manifestJson);
-
-            return updateSubManifest(manifestData, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }finally {
-            if(builtinManifestStream!=null) {
-                try {
-                    builtinManifestStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    public static boolean registerSubBundles(Context context,String routerFileName) {
+        Manifest manifest=readManifestFromFile(context,routerFileName);
+//        setupLaunchers(context);
+        if (manifest == null) return false;
+        loadBundles(manifest.bundles);
+        return true;
     }
 
     private static Manifest parseManifest(JSONObject data) {
@@ -485,6 +383,53 @@ public class Bundle {
         return sPreloadBundles;
     }
 
+
+
+    private static Manifest readManifestFromFile(Context context,String assetsFileName){
+        JSONObject manifestData;
+        InputStream builtinManifestStream = null;
+        String manifestJson ;
+        try {
+//            File patchManifestFile = getPatchManifestFile();
+//            manifestJson= getCacheManifest();
+//            if (manifestJson != null) {
+//                // Load from cache and save as patch
+//                savePatchManifestFile(patchManifestFile,manifestJson);
+//                // Clear cache
+//                setCacheManifest(null);
+////            } else if (patchManifestFile.exists()) {
+////                // Load from patch
+////                manifestJson = readPatchManifestFile(patchManifestFile);
+//            } else {
+            // Load from built-in `assets/bundle.json'
+            builtinManifestStream = context.getAssets().open(assetsFileName);
+            int builtinSize = builtinManifestStream.available();
+            byte[] buffer = new byte[builtinSize];
+            builtinManifestStream.read(buffer);
+            builtinManifestStream.close();
+            builtinManifestStream=null;
+            manifestJson = new String(buffer, 0, builtinSize);
+            //save cache
+//                savePatchManifestFile(patchManifestFile,manifestJson);
+//            }
+
+            // Parse manifest file
+            manifestData = new JSONObject(manifestJson);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }finally {
+            if(builtinManifestStream!=null) {
+                try {
+                    builtinManifestStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return parseManifest(manifestData);
+
+    }
 //    protected static void registerLauncher(BundleLauncher launcher) {
 //        if (sBundleLaunchers == null) {
 //            sBundleLaunchers = new ArrayList<BundleLauncher>();
@@ -795,22 +740,22 @@ public class Bundle {
     protected URL getURL() {
         return url;
     }
-
-    protected File getBuiltinFile() {
-        return mBuiltinFile;
-    }
-
-    public File getPatchFile() {
-        return mPatchFile;
-    }
-
-    protected File getExtractPath() {
-        return mExtractPath;
-    }
-
-    protected void setExtractPath(File path) {
-        this.mExtractPath = path;
-    }
+//
+//    protected File getBuiltinFile() {
+//        return mBuiltinFile;
+//    }
+//
+//    public File getPatchFile() {
+//        return mPatchFile;
+//    }
+//
+//    protected File getExtractPath() {
+//        return mExtractPath;
+//    }
+//
+//    protected void setExtractPath(File path) {
+//        this.mExtractPath = path;
+//    }
 
     protected String getType() {
         return type;
@@ -925,9 +870,9 @@ public class Bundle {
 //        this.parser = parser;
 //    }
 
-    public String getBuiltinAssetName() {
-        return mBuiltinAssetName;
-    }
+//    public String getBuiltinAssetName() {
+//        return mBuiltinAssetName;
+//    }
 
     //______________________________________________________________________________
     // Internal class
@@ -942,108 +887,26 @@ public class Bundle {
 
         @Override
         public void run() {
-            loadBundles(mContext);
+            loadHostBundles(mContext);
             sHandler.obtainMessage(MSG_COMPLETE).sendToTarget();
         }
     }
 
-    private static final int LOADING_TIMEOUT_MINUTES = 5;
-
     private static void loadBundles(List<Bundle> bundles) {
-        sPreloadBundles = bundles;
-
-        // Prepare bundle
-        for (Bundle bundle : bundles) {
-            bundle.prepareForLaunch();
+        if(sPreloadBundles==null)
+            sPreloadBundles=new ArrayList<>();
+        HashSet<String> existBundleUris=new HashSet<>();
+        for(Bundle bundle:sPreloadBundles){
+            existBundleUris.add(bundle.uriString);
         }
-
-//        // Handle I/O
-//        if (sIOActions != null) {
-//            ExecutorService executor = Executors.newFixedThreadPool(sIOActions.size());
-//            for (Runnable action : sIOActions) {
-//                executor.execute(action);
-//            }
-//            executor.shutdown();
-//            try {
-//                if (!executor.awaitTermination(LOADING_TIMEOUT_MINUTES, TimeUnit.MINUTES)) {
-//                    throw new RuntimeException("Failed to load bundles! (TIMEOUT > "
-//                            + LOADING_TIMEOUT_MINUTES + "minutes)");
-//                }
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            sIOActions = null;
-//        }
-//
-//        // Wait for the things to be done on UI thread before `postSetUp`,
-//        // as on 7.0+ we should wait a WebView been initialized. (#347)
-//        while (sRunningUIActionCount != 0) {
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        // Notify `postSetUp' to all launchers
-////        for (BundleLauncher launcher : sBundleLaunchers) {
-////            launcher.postSetUp();
-////        }
-//
-//        // Wait for the things to be done on UI thread after `postSetUp`,
-//        // like creating a bundle application.
-//        while (sRunningUIActionCount != 0) {
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-        // Free all unused temporary variables
-        for (Bundle bundle : bundles) {
-//            if (bundle.parser != null) {
-//                bundle.parser.close();
-//                bundle.parser = null;
-//            }
-            bundle.mBuiltinFile = null;
-            bundle.mExtractPath = null;
-        }
-    }
-
-    private static List<Runnable> sIOActions;
-    private static int sRunningUIActionCount;
-
-    protected static void postIO(Runnable action) {
-        if (sIOActions == null) {
-            sIOActions = new ArrayList<Runnable>();
-        }
-        sIOActions.add(action);
-    }
-
-    protected static void postUI(final Runnable action) {
-        if (sHandler == null) {
-            action.run();
-            return;
-        }
-
-        beginUI();
-        Message msg = Message.obtain(sHandler, new Runnable() {
-            @Override
-            public void run() {
-                action.run();
-                commitUI();
+        for (Bundle bundle:bundles) {
+            if(existBundleUris.contains(bundle.uriString)){
+                throw new UnsupportedOperationException("find exist bundle,unsupport cover it. Bundle uri : " + bundle.uriString);
+            }else {
+                sPreloadBundles.add(bundle);
+                bundle.prepareForLaunch();
             }
-        });
-        msg.sendToTarget();
-    }
-
-    protected static synchronized void beginUI() {
-        sRunningUIActionCount++;
-    }
-
-    protected static synchronized void commitUI() {
-        sRunningUIActionCount--;
+        }
     }
 
     private static class LoadBundleHandler extends Handler {

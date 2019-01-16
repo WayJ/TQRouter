@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.0'
 
 //        classpath 'com.qihoo360.replugin:replugin-host-gradle:2.2.4'
 //        classpath 'com.qihoo360.replugin:replugin-plugin-gradle:2.2.4'
@@ -40,7 +40,7 @@ ext {
     userOrg = 'wayj'
     groupId = 'com.wayj.tqrouter'
     uploadName = 'TQRouter'
-    publishVersion = '0.1.5'
+    publishVersion = '1.0.0'
     desc = 'fix bug:create fragment'
     website = 'https://github.com/WayJ/TQRouter'
     licences = ['Apache-2.0']

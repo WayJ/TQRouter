@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 
 import com.tianque.lib.router.lifecycle.AppLCOCaller;
 import com.tianque.lib.router.post.OnPostResultListener;
 import com.tianque.lib.router.post.PostRequest;
 
+import java.util.List;
 import java.util.Map;
 
 public class TQRouter {
@@ -67,8 +69,8 @@ public class TQRouter {
     /**
      * 用来注册插件的路由地址，由不同的插件来调用
      */
-    public static void register(Context context) {
-        Bundle.registerSubBundles(context);
+    public static void register(String routerFileName) {
+        Bundle.registerSubBundles(mContext,routerFileName);
     }
 
     public static Context getContext() {
@@ -227,5 +229,17 @@ public class TQRouter {
 
     public static AppLCOCaller getAppLCOCaller() {
         return appLCOCaller;
+    }
+
+    public static void print(){
+        List<Bundle> bundles = Bundle.getLaunchableBundles();
+        StringBuilder sb=new StringBuilder();
+        sb.append("\n------ TQRouter: Router Table\n");
+        for (Bundle bundle:bundles){
+            sb.append(bundle.getUri().toString()).append("\n")
+                    .append("   ").append(bundle.getPackageName()).append("\n");
+        }
+        sb.append("----------------\n");
+        Log.e(SHARED_PREFERENCES_SMALL,sb.toString());
     }
 }

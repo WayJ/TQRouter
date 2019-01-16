@@ -17,6 +17,7 @@ public class MainApplication extends Application {
 
 //        TQRouter.setRouterLauncher(new ActivityBundleLauncher());
         TQRouter.setUp(this);
+        TQRouter.print();
         TQRouter.getAppLCOCaller().callOnCreate(this);
 
     }

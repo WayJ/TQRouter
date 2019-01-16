@@ -9,7 +9,7 @@
 > * 简单方便的功能，调用简单，扩展方便
 > * 无注解，无反射，无Gradle依赖
 > * 路由配置文件在一个存放assets下的json文件中-
-> * 路由配置文件可通过网络下发进行更新
+> * 路由配置文件可通过网络下发进行更新(unsupport)
 > * 路由配置支持不同个体插件自己注册自己的路由
 > * 代码的实现参考了[small](https://github.com/wequick/Small)
 
@@ -20,14 +20,10 @@
 依赖
 
 ```
-
-	
-    implementation 'com.wayj.tqrouter:tqrouter:0.1.3'
-    implementation 'com.wayj.tqrouter:adapter-replugin:0.1.3'
-    
-    //implementation project(':lib.router')
+    implementation 'com.wayj.tqrouter:tqrouter:1.0.0'
     //replugin 中使用请依赖router.adapter-replugin
-    //implementation project(':lib.router.adapter-replugin')
+    implementation 'com.wayj.tqrouter:adapter-replugin:1.0.0'
+    
 ```
 
 宿主中初始化
@@ -58,7 +54,7 @@
 AppLCObserver 用来在你的模块中能够调用到host的application的生命周期
 默认查找该类的classname为 module包名下的AppObserver类，暂无设置功能，例如"com.wayj.example.app.main.AppObserver"
 ```
-public interface AppLCObserver {
+public class AppLCObserver {
     /**
      * 这里必须返回一个tag，可以是模块名，也可以是具体的功能，比如单独初始化bugly的类，tag应设置为bugly。会用这个tag做重复筛选和异常控制
      * @return
@@ -77,6 +73,19 @@ public interface AppLCObserver {
     void onStop();
 }
 ```
+
+子模块主动注册路由表  
+必须在子模块的AppObserver类中，于onSetup方法中 通过TQRouter.register("router_moduleName.json")来注册  
+注意点1： 注意这里的文件需要放入子模块自己的asset文件夹下，注意文件名不要于宿主的router.json重名。  
+注意点2： 暂时不支持覆盖相同uri的路由，会报错警告
+
+```java
+    @Override
+    public void onSetup(AppLCOCaller lcoCaller) {
+        TQRouter.register("router_main.json");
+    }
+```
+
 
 调用路由跳转activity
 
@@ -160,14 +169,3 @@ Postcard为单次的调用请求的实体，包含了uri、解析后的path、�
 
 Bundle Launcher中的launchBundle方法为当前需要实现的主要方法。
 
-------
-
-## ToDoList
-
-- [ ] 支持跨进程
-- [ ] 子插件主动向宿主注册自己的路由配置（待测试）
-- [ ] 下发新插件时候，宿主自动读取插件路由配置信息
-- [ ] 使用路由跳转时，添加uri参数，如 “main/login?userName=admin&password=123456”
-- [ ] 通过路由创建fragment
-- [ ] 通过路由启动Service
-- [ ] 其他更多功能

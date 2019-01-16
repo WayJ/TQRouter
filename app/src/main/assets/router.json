@@ -8,13 +8,6 @@
       "rules": {
         "": ".MainActivity"
       }
-    },
-    {
-      "uri": "home",
-      "pkg": "com.wayj.example.app.home",
-      "rules": {
-        "myact": "com.wayj.example.app.home.activity.MyActivity"
-      }
     }
   ]
 }

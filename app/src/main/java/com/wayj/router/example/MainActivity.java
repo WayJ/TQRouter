@@ -12,14 +12,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_launcher);
 
-        ((Button)findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                TQRouter.openUri("main",MainActivity.this);
-                TQRouter.createFragmentV4("main",MainActivity.this);
+                TQRouter.openUri("main",MainActivity.this);
+//                TQRouter.createFragmentV4("main",MainActivity.this);
 //                startActivity(TQRouter.getIntentOfUri("main",MainActivity.this));
+            }
+        });
+
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TQRouter.openUri("mine",MainActivity.this);
             }
         });
     }
