@@ -79,6 +79,7 @@ public class Bundle {
     private static final String DEFAULT_ENTRANCE_PATH2 = "/";
     private static final String DEFAULT_ENTRANCE_ACTIVITY = ".MainActivity";
 
+
     private static final class Manifest {
         String version;
         List<Bundle> bundles;
@@ -109,6 +110,7 @@ public class Bundle {
     private String versionName;
 
     private BundleLauncher mApplicableLauncher = null;
+    private AppLCObserver appLCObserver;
 
 //    private String mBuiltinAssetName = null;
 //    private File mBuiltinFile = null;
@@ -636,7 +638,9 @@ public class Bundle {
                 try {
                     Class appObserver = Class.forName(defaultAppLCOName);
                     if(AppLCObserver.class.isAssignableFrom(appObserver)){
-                        TQRouter.appLCOCaller.addLCObserver((AppLCObserver) appObserver.newInstance());
+                        AppLCObserver observer = (AppLCObserver) appObserver.newInstance();
+                        setAppLCObserver(observer);
+                        TQRouter.appLCOCaller.addLCObserver(observer);
                     }
                 } catch (ClassNotFoundException e) {
                 } catch (IllegalAccessException e) {
@@ -931,4 +935,11 @@ public class Bundle {
         }
     }
 
+    public AppLCObserver getAppLCObserver() {
+        return appLCObserver;
+    }
+
+    public void setAppLCObserver(AppLCObserver appLCObserver) {
+        this.appLCObserver = appLCObserver;
+    }
 }

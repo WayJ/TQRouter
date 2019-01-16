@@ -2,8 +2,11 @@ package com.tianque.lib.router.lifecycle;
 
 import android.app.Application;
 
+import com.tianque.lib.router.Bundle;
+
 public abstract class AppLCObserver {
-    private boolean setuped = false;
+    private boolean setuped = false;//tqrouter 的初始化
+    private boolean perload = false;//自身模块的初始化，点进模块时候才执行
 
     public boolean isSetuped() {
         return setuped;
@@ -11,6 +14,14 @@ public abstract class AppLCObserver {
 
     public void setSetuped(boolean setuped) {
         this.setuped = setuped;
+    }
+
+    public boolean isPerload() {
+        return perload;
+    }
+
+    public void setPerload(boolean perload) {
+        this.perload = perload;
     }
 
     /**
@@ -33,4 +44,12 @@ public abstract class AppLCObserver {
     }
     public abstract void onCreate(Application application);
     public abstract void onStop();
+
+    public void perload(CallBack callBack){
+        callBack.apply();
+    }
+
+    public interface CallBack{
+        void apply();
+    }
 }

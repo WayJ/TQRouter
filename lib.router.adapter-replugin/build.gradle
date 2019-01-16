@@ -17,6 +17,9 @@ android {
         abortOnError false
     }
 
+    libraryVariants.all {
+        it.generateBuildConfig.enabled = false
+    }
 }
 
 dependencies {

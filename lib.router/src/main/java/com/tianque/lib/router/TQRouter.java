@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.tianque.lib.router.lifecycle.AppLCOCaller;
+import com.tianque.lib.router.lifecycle.AppLCObserver;
 import com.tianque.lib.router.post.OnPostResultListener;
 import com.tianque.lib.router.post.PostRequest;
 
@@ -81,7 +82,7 @@ public class TQRouter {
         return openUri(makeUri(uriString), context);
     }
 
-    public static boolean openUri(Uri uri, Context context) {
+    public static boolean openUri(Uri uri, final Context context) {
         // System url schemes
         String scheme = uri.getScheme();
         if (scheme != null
@@ -93,9 +94,14 @@ public class TQRouter {
         }
 
         // Small url schemes
-        Postcard postcard = Bundle.makePostcard(uri);
+        final Postcard postcard = Bundle.makePostcard(uri);
         if (postcard != null) {
-            postcard.getBundle().launchFrom(context, postcard);
+            AppLCObserver observer = postcard.getBundle().getAppLCObserver();
+            if(observer!=null&&!observer.isPerload()){
+                new PerloadDialog(context,observer,postcard).show();
+            }else{
+                postcard.getBundle().launchFrom(context, postcard);
+            }
             return true;
         }
         return false;

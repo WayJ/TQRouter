@@ -46,7 +46,7 @@ public class AppLCOCaller {
         }
     }
 
-    public void loadBundles(String routerFileName) {
+    public void findCallerByBundle(String bundleUri) {
 
     }
 }
