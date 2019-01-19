@@ -4,15 +4,15 @@ import android.app.Application;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AppLCOCaller {
-    private Map<String, AppLCObserver> appLCObservers;
+    private Map<String, AppLCObserver> appLCObservers = new HashMap();
 
     public AppLCOCaller addLCObserver(AppLCObserver observer) {
-        if (appLCObservers == null)
-            appLCObservers = new HashMap();
         if (!TextUtils.isEmpty(observer.getTag())) {
             appLCObservers.put(observer.getTag(), observer);
         } else {
@@ -26,7 +26,9 @@ public class AppLCOCaller {
     }
 
     public void callOnSetup() {
-        for (AppLCObserver appLCObserver : appLCObservers.values()) {
+        List<AppLCObserver> tmpList = new ArrayList<>();
+        tmpList.addAll(appLCObservers.values());
+        for (AppLCObserver appLCObserver : tmpList) {
             if (!appLCObserver.isSetuped()) {
                 appLCObserver.onSetup(this);
                 appLCObserver.setSetuped(true);

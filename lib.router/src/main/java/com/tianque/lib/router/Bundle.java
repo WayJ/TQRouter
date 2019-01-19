@@ -108,6 +108,7 @@ public class Bundle {
     private HashMap<String, String> rules;
     private int versionCode;
     private String versionName;
+    private boolean link;//link为true表示这个bundle是一个暂时的link连接，仅为了寻找到真正的子模块bundle
 
     private BundleLauncher mApplicableLauncher = null;
     private AppLCObserver appLCObserver;
@@ -662,7 +663,12 @@ public class Bundle {
             this.type = map.getString("type");
         }
 
-        this.rules = new HashMap<String, String>();
+        if(map.has("link")){
+            boolean link = map.getBoolean("link");
+            this.link=link;
+        }
+
+        this.rules = new HashMap<>();
         String entrancePath = DEFAULT_ENTRANCE_PATH;
         if (map.has("rules")) {
             // User rules to visit other page of bundle
@@ -899,13 +905,19 @@ public class Bundle {
     private static void loadBundles(List<Bundle> bundles) {
         if(sPreloadBundles==null)
             sPreloadBundles=new ArrayList<>();
-        HashSet<String> existBundleUris=new HashSet<>();
+        HashMap<String,Bundle> existBundleUris=new HashMap<>();
         for(Bundle bundle:sPreloadBundles){
-            existBundleUris.add(bundle.uriString);
+            existBundleUris.put(bundle.uriString,bundle);
         }
         for (Bundle bundle:bundles) {
-            if(existBundleUris.contains(bundle.uriString)){
-                throw new UnsupportedOperationException("find exist bundle,unsupport cover it. Bundle uri : " + bundle.uriString);
+            if(existBundleUris.containsKey(bundle.uriString)){
+                Bundle bundleExist=existBundleUris.get(bundle.uriString);
+                if(bundleExist.link){
+                    sPreloadBundles.remove(bundleExist);
+                    sPreloadBundles.add(bundle);
+                    bundle.prepareForLaunch();
+                }else
+                    throw new UnsupportedOperationException("find exist bundle,unsupport cover it. Bundle uri : " + bundle.uriString);
             }else {
                 sPreloadBundles.add(bundle);
                 bundle.prepareForLaunch();

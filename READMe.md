@@ -40,7 +40,9 @@
 	    TQRouter.setUp(this);
 	    
 	    //AppLCObserver 调用
-	    TQRouter.getAppLCOCaller().callOnCreate(this);
+	    TQRouter.getAppLCOCaller()
+	        //.add//add xxxxx
+	        .callOnCreate(this);
 	}
 	
 	@Override
@@ -77,7 +79,7 @@ public class AppLCObserver {
 子模块主动注册路由表  
 必须在子模块的AppObserver类中，于onSetup方法中 通过TQRouter.register("router_moduleName.json")来注册  
 注意点1： 注意这里的文件需要放入子模块自己的asset文件夹下，注意文件名不要于宿主的router.json重名。  
-注意点2： 暂时不支持覆盖相同uri的路由，会报错警告
+注意点2： 暂时不支持覆盖相同uri的路由，会报错警告，只有"link":true的模块路由表才会被覆盖
 
 ```java
     @Override
@@ -133,7 +135,8 @@ JSON路由配置
     },
     {
       "uri": "home",
-      "pkg": "com.tianque.cmm.app.home"
+      "pkg": "com.tianque.cmm.app.home",
+      "link":true  //表示寻找com.tianque.cmm.app.home.AppObserver 类来注册子模块的路由表，只有"link":true的模块路由表才会被覆盖
     },
     {
       "uri": "mine",

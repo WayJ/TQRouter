@@ -1,13 +1,10 @@
 {
   "version": "1.0.0",
   "bundles": [
-
     {
       "uri": "main",
       "pkg": "com.wayj.example.app.main",
-      "rules": {
-        "": ".MainActivity"
-      }
+      "link": true
     }
   ]
 }
