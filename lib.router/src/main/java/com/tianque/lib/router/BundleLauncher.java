@@ -69,6 +69,22 @@ public abstract class BundleLauncher {
 
 
     public <T> T createObject(Postcard postcard, Context context, String type) {
+        if(type.equals("class")){
+            String packageName = postcard.getBundle().getPackageName();
+            if (packageName == null) return null;
+            String fname = postcard.getPath();
+            char c = fname.charAt(0);
+            if (c == '.') {
+                fname = packageName + fname;
+            } else if (c >= 'A' && c <= 'Z') {
+                fname = packageName + "." + fname;
+            }
+            try {
+                return (T) Class.forName(fname);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         return null;
     }
 

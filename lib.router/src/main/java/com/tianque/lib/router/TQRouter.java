@@ -187,6 +187,11 @@ public class TQRouter {
         return null;
     }
 
+    public static Class createClass(String uriString) {
+        return createObject("class", makeUri(uriString), null);
+    }
+
+
     public static Uri getUri(Activity context) {
         android.os.Bundle extras = context.getIntent().getExtras();
         if (extras == null) {

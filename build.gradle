@@ -40,8 +40,8 @@ ext {
     userOrg = 'wayj'
     groupId = 'com.wayj.tqrouter'
     uploadName = 'TQRouter'
-    publishVersion = '1.0.4'
-    desc = 'fix bug:create fragment'
+    publishVersion = '1.0.5'
+    desc = '添加了通过路由找到class的方式'
     website = 'https://github.com/WayJ/TQRouter'
     licences = ['Apache-2.0']
 }

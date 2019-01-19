@@ -29,5 +29,14 @@ public class MainActivity extends AppCompatActivity {
                 TQRouter.openUri("mine",MainActivity.this);
             }
         });
+
+        Class clz = TQRouter.createObject("class","main/AppObserver",null);
+        try {
+            clz.newInstance();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 }

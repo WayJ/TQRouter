@@ -5,7 +5,8 @@
       "uri": "main",
       "pkg": "com.wayj.example.app.main",
       "rules": {
-        "": ".MainActivity"
+        "": ".MainActivity",
+        "AppObserver":".AppObserver"
       }
     },
     {

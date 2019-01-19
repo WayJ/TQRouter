@@ -77,9 +77,12 @@ public class AppLCObserver {
 ```
 
 子模块主动注册路由表  
+
+<!--1.0.3 版本 新增功能-->
+
 必须在子模块的AppObserver类中，于onSetup方法中 通过TQRouter.register("router_moduleName.json")来注册  
 注意点1： 注意这里的文件需要放入子模块自己的asset文件夹下，注意文件名不要于宿主的router.json重名。  
-注意点2： 暂时不支持覆盖相同uri的路由，会报错警告，只有"link":true的模块路由表才会被覆盖
+注意点2： 暂时不支持覆盖相同uri的路由，会报错警告，只有"link":true的模块路由表才会被覆盖<!--1.0.4 版本 新增功能-->
 
 ```java
     @Override
@@ -153,6 +156,18 @@ JSON路由配置
 默认openUri("main")即跳转到对应的pkg-“wayj.example”+".MainActivity",
 
 rules下的如果key为“”或者“/”即表示当前Bundle的默认路径  
+
+
+
+##### 通过路由寻找到目标 Class
+
+需要在路由表中先注册，用于做服务暴露等功能，返回了Class对象
+
+```
+TQRouter.createClass("main\AppObserver")
+```
+
+<!--1.0.5 版本 新增功能-->
 
 ------
 
