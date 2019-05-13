@@ -36,6 +36,12 @@ public class AppLCOCaller {
         }
     }
 
+    public void callAttachBaseContext(Application application){
+        for (AppLCObserver appLCObserver : appLCObservers.values()) {
+            appLCObserver.attachBaseContext(application);
+        }
+    }
+
     public void callOnCreate(Application application) {
         for (AppLCObserver appLCObserver : appLCObservers.values()) {
             appLCObserver.onCreate(application);

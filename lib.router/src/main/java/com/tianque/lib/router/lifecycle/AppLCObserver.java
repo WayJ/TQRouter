@@ -42,6 +42,10 @@ public abstract class AppLCObserver {
     public void onSetup(AppLCOCaller lcoCaller){
 
     }
+
+    public void attachBaseContext(Application application){
+
+    }
     public abstract void onCreate(Application application);
     public abstract void onStop();
 
